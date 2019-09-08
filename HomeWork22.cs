@@ -9,16 +9,13 @@ namespace HomeWork_22
     {
         static void Main(string[] args)
         {
-            var stream = File.Open(@"D:\ProjectForVisualStudia\HomeWork_22\HomeWork_22\p022_names.txt", FileMode.OpenOrCreate);
-            var arrayStream = new byte[stream.Length];
-            stream.Read(arrayStream, 0, arrayStream.Length);
-            var textFromFile = Encoding.Default.GetString(arrayStream)
-                                    .Replace('\"', ' ')
-                                    .Split(',')
-                                    .OrderBy(x => x);
-            Console.WriteLine(CountWeightAllName(textFromFile.ToList()));
+            var textFromFile = File.ReadAllText(@"D:\ProjectForVisualStudia\HomeWork_22\HomeWork_22\p022_names.txt")
+                                    .Replace('\"', ',')
+                                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                    .OrderBy(x => x)
+                                    .ToList();
+            Console.WriteLine(CountWeightAllName(textFromFile));
             Console.ReadKey();
-
         }
 
         public static long CountWeightAllName(List<string> names)
@@ -26,25 +23,24 @@ namespace HomeWork_22
             var alphabet = GetAlphbet();
 
             long countAllNames = 0;
-            for(int j = 0; j < names.Count; j++)
+            int countName = 0;
+            for (int j = 0; j < names.Count(); j++)
             {
-                long count = 0;
-                for(int i =0; i< names[j].Length;i++)
+                foreach (var letter in names[j])
                 {
-                    count += alphabet.Where(x => x.Key == names[j][i])
-                                     .FirstOrDefault()
-                                     .Value;
+                    countName += alphabet[letter];
                 }
-                countAllNames += count * (j + 1);
+                countAllNames += countName * (j + 1);
+                countName = 0;
             }
             return countAllNames;
         }
 
-        public static Dictionary<char,int> GetAlphbet()
+        public static Dictionary<char, int> GetAlphbet()
         {
             var alphbet = new Dictionary<char, int>();
-            int i = 0;
-            for(var c = 'A'; c <= 'Z'; ++c, i++)
+            int i = 1;
+            for (var c = 'A'; c <= 'Z'; ++c, i++)
             {
                 alphbet.Add(c, i);
             }
