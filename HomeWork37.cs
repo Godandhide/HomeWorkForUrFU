@@ -6,48 +6,51 @@ namespace HomeWork37
     {
         static void Main(string[] args)
         {
-            int sum = 0, count = 1;
-            for (int i = 11; i < 10000; i++)
+            ulong sum = 0, count = 0,iterator=10;
+            while (count < 11)
             {
-                if (IsFindNumer(i))
+                if (IsInterestingIterator(iterator))
                 {
-                    sum += i;
                     count++;
+                    sum += iterator;
+                    Console.WriteLine(sum);
                 }
-                if (count == 11)
-                    break;
+                iterator++;
+                
             }
+            Console.WriteLine(sum);
             Console.ReadKey();
         }
 
-        private static bool IsSimpleNumber(int number)
+        private static bool IsInterestingIterator(ulong number)
         {
-            bool result = true;
-            int newNumber = (int)Math.Sqrt(number);
-            for(int i=2; i<= newNumber;i++)
-                if(newNumber % i == 0)
-                {
-                    result = false;
-                    break;
-                }
-            return result;
+            var numberLenth = FindNumberLenth(number);
+            if (!IsSimpleNumber(number)) return false;
+            if (numberLenth <= 1) return false;
+            ulong test1 = number, test2 = number;
+            for (ulong i = numberLenth - 1; i > 0; i--)
+                if (!IsSimpleNumber(test2 = test2 % (ulong)(Math.Pow(10, i))))
+            return false;
+            for (ulong i = 1; i < numberLenth; i++)
+                if (!IsSimpleNumber(test1 /= 10))
+                    return false;
+            return true;
         }
 
-        private static bool IsFindNumer(int number)
+        private static ulong FindNumberLenth(ulong number)
         {
-            bool result = false;
-            for(int i = 1; 1 < number; i *= 10)
-            {
-                number /= i;
-                if (number <= i)
-                    break;
-                if (!IsSimpleNumber(number))
-                {
-                    result = false;
-                    break;
-                }
-            }
-            return result;
+            ulong i;
+            for (i = 1; (number /= 10) == 0; ++i) ;
+            return i;
+        }
+
+        private static bool IsSimpleNumber(ulong number)
+        {
+            ulong newNumber = (ulong)Math.Sqrt(number);
+            for (ulong i = 2; i <= newNumber; i++)
+                if (newNumber % i == 0)
+                    return false;
+            return true; ;
         }
     }
 }
